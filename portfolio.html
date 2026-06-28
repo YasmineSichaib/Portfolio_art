@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yadelia | Manga Art Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Colors --- */
+        :root {
+            --bg-principal: rgba(251, 229, 227, 1); /* Ton rose poudré exact */
+            --texte-sombre: #3d141d;
+            --texte-logo: #581d2a;
+            --blanc-pur: #ffffff;
+            --transition-smooth: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-principal); 
+            color: var(--texte-sombre); 
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUpBlur {
+            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+            50% { transform: translateY(-15px) rotate(15deg); opacity: 0.5; }
+        }
+
+        /* --- Screens System --- */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.97);
+            transition: var(--transition-smooth);
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+        }
+
+        /* Ajustement pour l'écran Créations (permet le scroll vertical des deux collections) */
+        #creations {
+            justify-content: flex-start;
+            overflow-y: auto;
+            padding: 120px 0 60px 0;
+        }
+
+        /* --- Global Elements --- */
+        .back-btn {
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            background: none;
+            border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1em;
+            color: var(--texte-logo);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-smooth);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            opacity: 0.7;
+        }
+
+        /* Curseur Pinceau */
+        button, a, .back-btn, .art-card {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'><text y='24'>🖌️</text></svg>"), pointer !important;
+        }
+
+        /* --- Home Screen --- */
+        .logo-ovale {
+            width: 320px;       
+            height: 150px;      
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            mix-blend-mode: multiply;
+            margin-bottom: 5px;
+            animation: gentleFloat 5s ease-in-out infinite, fadeInUpBlur 1s ease-out;
+        }
+
+        .logo-img {
+            width: 290px;       
+            max-width: none;
+            transition: var(--transition-smooth);
+        }
+
+        .home-subtitle {
+            font-size: 1.05em;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--texte-logo);
+            font-weight: 400;
+            margin-bottom: 45px;
+            opacity: 0.8;
+            animation: fadeInUpBlur 1s ease-out 0.2s both;
+        }
+
+        .character-art {
+            position: absolute;
+            bottom: 20px;
+            right: 50px;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; 
+            z-index: 50;
+            animation: gentleFloat 5s ease-in-out 1s infinite both;
+        }
+
+        .character-img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .menu-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 60; 
+        }
+
+        .main-btn {
+            background-color: var(--blanc-pur);
+            color: var(--texte-logo);
+            border: none;
+            padding: 18px 50px;
+            border-radius: 30px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1em;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 25px rgba(88, 29, 42, 0.06);
+            transition: var(--transition-smooth);
+            width: 280px;
+        }
+
+        .btn-1 { animation: fadeInUpBlur 1s ease-out 0.4s both; }
+        .btn-2 { animation: fadeInUpBlur 1s ease-out 0.6s both; }
+        .btn-3 { animation: fadeInUpBlur 1s ease-out 0.8s both; }
+
+        .main-btn:hover {
+            background-color: var(--texte-logo);
+            color: var(--blanc-pur);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(88, 29, 42, 0.12);
+        }
+
+        .bg-sparkle {
+            position: absolute;
+            font-size: 1.6rem;
+            pointer-events: none;
+            user-select: none;
+            animation: sparkleFloat 6s ease-in-out infinite;
+        }
+        .sp-1 { top: 22%; left: 18%; animation-delay: 0s; }
+        .sp-2 { bottom: 20%; right: 15%; animation-delay: 1.5s; }
+        .sp-3 { top: 45%; right: 20%; animation-delay: 3s; font-size: 1.2rem; }
+
+        /* --- Cards Styles (About & Contact) --- */
+        .about-card {
+            background: var(--blanc-pur);
+            padding: 50px;
+            border-radius: 30px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(88, 29, 42, 0.08);
+        }
+
+        .about-card h2 {
+            color: var(--texte-logo);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .about-card p {
+            font-size: 1.15em;
+            line-height: 1.8;
+            font-weight: 300;
+            color: var(--texte-sombre);
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: block;
+            text-decoration: none;
+            color: var(--texte-logo);
+            background-color: var(--bg-principal);
+            padding: 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: var(--transition-smooth);
+        }
+
+        .contact-item:hover {
+            background-color: var(--texte-logo);
+            color: var(--blanc-pur);
+            transform: scale(1.03);
+        }
+
+        /* --- TWO SECTIONS CREATIONS --- */
+        .creations-title {
+            color: var(--texte-logo);
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .category-section {
+            width: 100%;
+            margin-bottom: 60px;
+            animation: fadeInUpBlur 1s ease-out both;
+        }
+
+        .category-title {
+            color: var(--texte-logo);
+            font-size: 1.5em;
+            padding-left: 10vw;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .gallery-swiper {
+            display: flex;
+            gap: 30px;
+            width: 100vw;
+            padding: 10px 10vw 25px 10vw;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            align-items: center;
+        }
+
+        /* Scrollbar esthétique */
+        .gallery-swiper::-webkit-scrollbar {
+            height: 5px;
+        }
+        .gallery-swiper::-webkit-scrollbar-track {
+            background: rgba(88, 29, 42, 0.05);
+            border-radius: 10px;
+            margin: 0 10vw;
+        }
+        .gallery-swiper::-webkit-scrollbar-thumb {
+            background: rgba(88, 29, 42, 0.3);
+            border-radius: 10px;
+        }
+
+        .art-card {
+            flex: 0 0 320px;
+            scroll-snap-align: center;
+            background-color: var(--blanc-pur);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(88, 29, 42, 0.05);
+            transition: var(--transition-smooth);
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(88, 29, 42, 0.1);
+        }
+
+        .img-container {
+            width: 100%;
+            height: 360px;
+            background-color: rgba(88, 29, 42, 0.02);
+            overflow: hidden;
+        }
+
+        .art-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .art-card:hover .img-container img {
+            transform: scale(1.04);
+        }
+
+        .art-info {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .art-info h3 {
+            font-size: 1.15em;
+            color: var(--texte-logo);
+            margin-bottom: 5px;
+        }
+
+        .art-info p {
+            font-size: 0.85em;
+            opacity: 0.7;
+        }
+
+        /* --- LIGHTBOX SYSTEM --- */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(61, 20, 29, 0.92);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-img {
+            max-width: 85%;
+            max-height: 75vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            object-fit: contain;
+        }
+
+        .lightbox.active .lightbox-img {
+            transform: scale(1);
+        }
+
+        .lightbox-caption {
+            color: var(--blanc-pur);
+            margin-top: 25px;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            max-width: 80%;
+            animation: fadeInUpBlur 0.6s ease-out 0.2s both;
+        }
+
+        .lightbox-caption h3 {
+            font-size: 1.5em;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .lightbox-caption p {
+            font-size: 1em;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: var(--blanc-pur);
+            font-size: 2.5em;
+            font-weight: 300;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .lightbox-close:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HOME SCREEN -->
+    <div id="home" class="screen active">
+        <div class="bg-sparkle sp-1">✨</div>
+        <div class="bg-sparkle sp-2">✨</div>
+        <div class="bg-sparkle sp-3">🎨</div>
+
+        <div class="character-art">
+            <img src="character_yadelia_waving.png" alt="Waving Anime Girl" class="character-img">
+        </div>
+
+        <div class="logo-ovale">
+            <img src="logo_yadelia_png.png" alt="Yadelia Logo" class="logo-img">
+        </div>
+        
+        <h1 class="home-subtitle">Manga Art Portfolio</h1>
+        
+        <div class="menu-nav">
+            <button class="main-btn btn-1" onclick="openScreen('about')">About Me</button>
+            <button class="main-btn btn-2" onclick="openScreen('creations')">My Creations</button>
+            <button class="main-btn btn-3" onclick="openScreen('contact')">Contact</button>
+        </div>
+    </div>
+
+    <!-- 2. ABOUT ME SCREEN -->
+    <div id="about" class="screen">
+        <button class="back-btn" onclick="openScreen('home')">← Back to home</button>
+        
+        <div class="about-card">
+            <h2>About Me</h2>
+            <p>
+                Hi, I'm <strong>Yasmine</strong>. I'm 25 years old, and here I share with you all my paintings and my art. 
+                <br><br>
+                Welcome to my world. My work is heavily inspired by manga culture, entirely shaped and hand-painted with acrylics on canvas. I believe in the magic of colors and putting my soul into every brushstroke.
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. CREATIONS SCREEN (DEUX COLLECTIONS UNIQUES) -->
+    <div id="creations" class="screen">
+        <button class="back-btn" onclick="openScreen('home')">← Back to home</button>
+        
+        <h2 class="creations-title">Gallery</h2>
+
+        <!-- COLLECTION 1 : CANVAS -->
+        <div class="category-section">
+            <h3 class="category-title">🔥 Canvas Collection</h3>
+            <div class="gallery-swiper">
+                
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="maki_zenin.jpeg" alt="Maki Zenin">
+                    </div>
+                    <div class="art-info">
+                        <h3>Maki Zenin - Jujutsu Kaisen</h3>
+                        <p>Acrylic on canvas — 30x40cm.</p>
+                    </div>
+                </div>
+
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="sung jin-woo.png" alt="Sung Jin-Woo">
+                    </div>
+                    <div class="art-info">
+                        <h3>Sung Jin-Woo - Solo Leveling</h3>
+                        <p>Acrylic on canvas — 40x40cm.</p>
+                    </div>
+                </div>
+
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="tengen uzui.png" alt="Tegen Uzui">
+                    </div>
+                    <div class="art-info">
+                        <h3>Tegen Uzui - Demon Slayer</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>
+		
+		
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="rengoku.png" alt="Kyojuro Rengoku">
+                    </div>
+                    <div class="art-info">
+                        <h3>Kyojuro Rengoku - Demon Slayer</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>
+
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="armin.png" alt="Armin Arlert">
+                    </div>
+                    <div class="art-info">
+                        <h3>Armin Arlert - Shingeki no kyojin</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>
+
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="pain.png" alt="Pain">
+                    </div>
+                    <div class="art-info">
+                        <h3>Pain - Naruto Shippuden</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>
+				
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="nobara.png" alt="Nobara Kugisaki">
+                    </div>
+                    <div class="art-info">
+                        <h3>Nobara Kugisaki - Jujutsu Kaisen</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>				
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="berserk.png" alt="Berserk">
+                    </div>
+                    <div class="art-info">
+                        <h3>Berserk's Logo</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>		
+				
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="power.png" alt="Power">
+                    </div>
+                    <div class="art-info">
+                        <h3>Power - Chainsaw man</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>					
+				
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="itachi.png" alt="Itachi Uchiha">
+                    </div>
+                    <div class="art-info">
+                        <h3>Itachi Uchiha - Naruto Shippuden</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>	
+
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="ao haru ride.png" alt="Futaba & Kou">
+                    </div>
+                    <div class="art-info">
+                        <h3>Futaba & Kou - Ao haru ride</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>	
+				
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="bt21.png" alt="BT21">
+                    </div>
+                    <div class="art-info">
+                        <h3>BT21</h3>
+                        <p>Acrylic and gloss varnish — A3 format.</p>
+                    </div>
+                </div>	
+            </div>
+        </div>
+
+		
+
+        <!-- COLLECTION 2 : GLASS PAINTING & PHONECASE -->
+        <div class="category-section">
+            <h3 class="category-title">📱 Glass Painting & Phonecase Collection</h3>
+            <div class="gallery-swiper">
+                
+                <!-- Exemple Glass Painting -->
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="images/glass_painting_1.jpg" alt="Glass Painting Artwork">
+                    </div>
+                    <div class="art-info">
+                        <h3>Gojo Satoru - Glass Painting</h3>
+                        <p>Hand-painted acrylic on plexiglass glass.</p>
+                    </div>
+                </div>
+
+                <!-- Exemple Phonecase -->
+                <div class="art-card" onclick="zoomImage(this)">
+                    <div class="img-container">
+                        <img src="images/phonecase_1.jpg" alt="Custom Phonecase">
+                    </div>
+                    <div class="art-info">
+                        <h3>Sukuna Anime Phonecase</h3>
+                        <p>Custom protective phone case painting.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 4. SCREEN CONTACT -->
+    <div id="contact" class="screen">
+        <button class="back-btn" onclick="openScreen('home')">← Back to home</button>
+        
+        <div class="about-card">
+            <h2>Get In Touch</h2>
+            <p>Feel free to reach out for commissions, projects, or just to say hi!</p>
+            
+            <div class="contact-links">
+                <a href="https://www.instagram.com/yasumin.md/" target="_blank" class="contact-item">
+                    📸 Instagram : @yasumin.md
+                </a>
+                <a href="mailto:yasminesichaib@gmail.com" class="contact-item">
+                    ✉️ Email : yasminesichaib@gmail.com
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. LIGHTBOX SYSTEM -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Zoomed Artwork">
+        <div id="lightbox-caption" class="lightbox-caption">
+            <h3 id="lightbox-title"></h3>
+            <p id="lightbox-desc"></p>
+        </div>
+    </div>
+
+    <script>
+        // Gestion du changement d'écran
+        function openScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            
+            if(screenId === 'creations') {
+                document.getElementById('creations').scrollTop = 0;
+            }
+        }
+
+        // Système de Zoom (Lightbox)
+        function zoomImage(cardElement) {
+            const imgSrc = cardElement.querySelector('img').src;
+            const title = cardElement.querySelector('.art-info h3').innerText;
+            const desc = cardElement.querySelector('.art-info p').innerText;
+
+            document.getElementById('lightbox-img').src = imgSrc;
+            document.getElementById('lightbox-title').innerText = title;
+            document.getElementById('lightbox-desc').innerText = desc;
+
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>
